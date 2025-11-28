@@ -22,7 +22,7 @@ function Viewall() {
       
             "id":1,
            
-            "name":"Italian Pizza",
+            "name":"Pizza",
             "ingredients": [
                 "Pizza dough",
                 "Tamato sause",
