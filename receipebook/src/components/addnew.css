@@ -1,0 +1,18 @@
+#registrationForm input,
+#registrationForm textarea {
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #bfbfbf;
+}
+
+#registrationForm input:focus,
+#registrationForm textarea:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+}
+
+button.btn-success {
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-weight: bold;
+}

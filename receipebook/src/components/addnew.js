@@ -1,95 +1,226 @@
-
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import axios from 'axios';
-import {Redirect} from 'react-router-dom'
+import './addnew.css';
+
 function Addnew() {
-    const [newreceipe,setNewReceipe]= useState({
-      name:'',
-      ingredients:'',
-      instructions:'',
-      cuisine:'',
-    })
-    const addnewdata=()=>{
-    axios.post('http://localhost:8000/recipes', newreceipe)
-        .then((res)=>{
-           // let data=res.data
-           // setReceipes(data)
-            console.log(res.data)
-        })
+  const [newReceipe, setNewReceipe] = useState({
+    name: '',
+    ingredients: [],
+    instructions: [],
+    cuisine: '',
+    tags: [],
+    rating: 0,
+    image: ''
+  });
 
-        
-      } 
-    
+  const [tagInput, setTagInput] = useState("");
+  const [error, setError] = useState('');
 
-    return (
-        <div>
-              <h1> Registeration Form</h1> <br/>
-    <Form id='registrationForm' onSubmit={addnewdata} >
-{/* <Form id='registrationForm' onSubmit={(e)=>validate(e)}> */}
+  // ⭐ TAGS — Add tag when ENTER is pressed
+  const handleTagAdd = (e) => {
+    if (e.key === "Enter" && tagInput.trim() !== "") {
+      e.preventDefault();
+      setNewReceipe({
+        ...newReceipe,
+        tags: [...newReceipe.tags, tagInput.trim()]
+      });
+      setTagInput("");
+    }
+  };
 
-       
+  // ⭐ RATING
+  const handleRating = (rate) => {
+    setNewReceipe({ ...newReceipe, rating: rate });
+  };
 
-        <Form.Group as={Row} className="mb-3" controlId="name">
-        <Form.Label column sm="2">
-           Name
-        </Form.Label>
+  // ⭐ SUBMIT FORM
+  const addNewData = (e) => {
+    e.preventDefault();
 
+    if (!newReceipe.name || !newReceipe.ingredients.length || !newReceipe.instructions.length) {
+      setError("Please fill all required fields!");
+      return;
+    }
 
-        <Col sm="10">
-         <Form.Control type="text"  placeholder="Name" onChange={(e)=>{setNewReceipe({...newreceipe,[e.target.id]:e.target.value});}}/>
-          {/* <Form.Control type="text" placeholder="username" onChange={(e)=>setUsername(e.target.value)} /> */}
-        </Col>
-        <div id="validationServerUser" class="invalid-feedback">Please choose a username</div>
-      </Form.Group>
-       
-      <Form.Group as={Row} className="mb-3" controlId="ingredients">
-        <Form.Label column sm="2">
-      ingredients
-        </Form.Label>
-        
-        <Col sm="10">
-         <Form.Control type="ingredients" placeholder="ingredients" onChange={(e)=>{setNewReceipe({...newreceipe,[e.target.id]:e.target.value});}}/>
-          {/* <Form.Control type="email" placeholder="Enter e-mail id" onChange={(e)=>setEmail(e.target.value)}/> */}
-        </Col>
-      </Form.Group>
+    setError("");
 
-      <Form.Group as={Row} className="mb-3" controlId="instructions">
-        <Form.Label column sm="2">
-      instructions
-        </Form.Label>
-        <Col sm="10">
-        <Form.Control type="instructions" placeholder="instructions"  onChange={(e)=>{setNewReceipe({...newreceipe,[e.target.id]:e.target.value});}}/>
-          {/* <Form.Control type="password" placeholder="password" onChange={(e)=>setPassword(e.target.value)}/> */}
-        </Col>
-      </Form.Group>
+    axios.post('http://localhost:5000/recipes', newReceipe)
+      .then(res => {
+        console.log("Recipe added:", res.data);
+      });
+  };
 
+  return (
+    <div className="add-container">
 
-      <Form.Group as={Row} className="mb-3" controlId="cuisine">
-        <Form.Label column sm="2">
-            cuisine
-        </Form.Label>
-      <Col sm="10">
-       <Form.Control type="cuisine" placeholder="cuisine" onChange={(e)=>{setNewReceipe({...newreceipe,[e.target.id]:e.target.value});}}/>
-          {/* // <Form.Control type="re-enter password" placeholder="re-enter Password" onChange={(e)=>setRepassword(e.target.value)} /> */}
-        </Col> 
-   </Form.Group>
-      <Col sm="10">
-          <Form.Control type="submit" placeholder="submit" />
-        </Col>
-    
-    </Form> 
-    {/* <div>
-      username : {username} <br/>
-      email : {email} <br/> 
-      password : {password} <br/>
-      repassword : {Repassword}
-    </div> */}
-        </div>
-        
-    )
+      <Card className="shadow-lg p-4 add-card">
+        <h2 className="text-center mb-4">Add New Recipe</h2>
+
+        {error && <Alert variant="danger">{error}</Alert>}
+
+        <Form onSubmit={addNewData}>
+
+          {/* NAME */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="3">Name *</Form.Label>
+            <Col sm="9">
+              <Form.Control 
+                type="text"
+                placeholder="Recipe name"
+                onChange={(e) =>
+                  setNewReceipe({ ...newReceipe, name: e.target.value })
+                }
+              />
+            </Col>
+          </Form.Group>
+
+          {/* INGREDIENTS */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="3">Ingredients *</Form.Label>
+            <Col sm="9">
+              <Form.Control 
+                as="textarea"
+                rows={3}
+                placeholder="One ingredient per line"
+                onChange={(e) =>
+                  setNewReceipe({
+                    ...newReceipe,
+                    ingredients: e.target.value.split("\n")
+                  })
+                }
+              />
+            </Col>
+          </Form.Group>
+
+          {/* INSTRUCTIONS */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="3">Instructions *</Form.Label>
+            <Col sm="9">
+              <Form.Control 
+                as="textarea"
+                rows={3}
+                placeholder="One step per line"
+                onChange={(e) =>
+                  setNewReceipe({
+                    ...newReceipe,
+                    instructions: e.target.value.split("\n")
+                  })
+                }
+              />
+            </Col>
+          </Form.Group>
+
+          {/* CUISINE */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="3">Cuisine</Form.Label>
+            <Col sm="9">
+              <Form.Select
+                onChange={(e) =>
+                  setNewReceipe({ ...newReceipe, cuisine: e.target.value })
+                }
+              >
+                <option>Select cuisine</option>
+                <option>Indian</option>
+                <option>Italian</option>
+                <option>Chinese</option>
+                <option>Mexican</option>
+                <option>Thai</option>
+              </Form.Select>
+            </Col>
+          </Form.Group>
+
+          {/* TAGS */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="3">Tags</Form.Label>
+            <Col sm="9">
+              <Form.Control 
+                type="text"
+                placeholder="Type tag & press Enter"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={handleTagAdd}
+              />
+
+              <div className="tag-box mt-2">
+                {newReceipe.tags.map((tag, index) => (
+                  <span key={index} className="tag-chip">{tag}</span>
+                ))}
+              </div>
+            </Col>
+          </Form.Group>
+
+          {/* RATING */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="3">Rating</Form.Label>
+            <Col sm="9">
+              <div className="stars">
+                {[1,2,3,4,5].map(num => (
+                  <span
+                    key={num}
+                    className={num <= newReceipe.rating ? "star filled" : "star"}
+                    onClick={() => handleRating(num)}
+                  >
+                    ★
+                  </span>
+                ))}
+              </div>
+
+              {/* <div style={{ fontSize: "24px", cursor: "pointer" }}>
+  {[1, 2, 3, 4, 5].map((star) => (
+    <span
+      key={star}
+      onClick={() => setRating(star)}
+      style={{
+        color: star <= rating ? "#f5b50a" : "#ccc"
+      }}
+    >
+      ★
+    </span>
+  ))}
+</div> */}
+            </Col>
+          </Form.Group>
+
+          {/* IMAGE URL */}
+          <Form.Group as={Row} className="mb-4">
+            <Form.Label column sm="3">Image URL *</Form.Label>
+            <Col sm="9">
+              <Form.Control
+                type="text"
+                placeholder="Paste image URL (e.g., https://i.imgur.com/abc.jpg)"
+                onChange={(e) =>
+                  setNewReceipe({ ...newReceipe, image: e.target.value })
+                }
+              />
+
+              {newReceipe.image && (
+                <img
+                  src={newReceipe.image}
+                  alt="preview"
+                  className="preview-img mt-3"
+                />
+              )}
+            </Col>
+          </Form.Group>
+
+          {/* BUTTON */}
+          <div className="text-center">
+            <Button type="submit" className="w-50 btn-lg" variant="success">
+              Add Recipe
+            </Button>
+          </div>
+
+        </Form>
+      </Card>
+
+    </div>
+  );
 }
-export default Addnew
 
+export default Addnew;
