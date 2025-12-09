@@ -1,30 +1,30 @@
 import { createSlice, createAsyncThunk, isPending } from "@reduxjs/toolkit"
 import axios from "axios";
-import {Collection, MongoClient} from 'mongodb'
+//import {Collection, MongoClient} from 'mongodb'
 
 
 export const fetchdata=createAsyncThunk("fetchdata", async ()=>{
-let uri= "mongodb+srv://Yogita:3ZC5peMv7fCKRMGW@cluster0.pjcnqgf.mongodb.net/?appName=Cluster0"
+// let uri= "mongodb+srv://Yogita:3ZC5peMv7fCKRMGW@cluster0.pjcnqgf.mongodb.net/?appName=Cluster0"
    
 
-  const client=new MongoClient(uri)
-  try{
-    await client.connect();
-    const db=client.db('Users')
-    const  mycollection =db.collection('users')
-    const mydbdata=await mycollection.find().toArray()
-    console.log(mydbdata)
-  }finally{
-await client.close()
-  }
-       let data =  axios.get('http://localhost:8000/recipes')
-        .then(res=>{
-            let data=res.data
-           return data
-        })
-       return data
+//   const client=new MongoClient(uri)
+//   try{
+//     await client.connect();
+//     const db=client.db('Users')
+//     const  mycollection =db.collection('users')
+//     const mydbdata=await mycollection.find().toArray()
+//     console.log(mydbdata)
+//   }finally{
+// await client.close()
+//   }
+    //    let data =  axios.get('http://localhost:8000/recipes')
+    //     .then(res=>{
+    //         let data=res.data
+    //        return data
+    //     })
+    //    return data
   
- })
+  })
 
 export const fetchdataSlice=createSlice({
     name:'getdata',

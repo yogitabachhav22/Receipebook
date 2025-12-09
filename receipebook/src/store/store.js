@@ -1,12 +1,12 @@
 import {configureStore} from '@reduxjs/toolkit'
 // import counterReducer from '../store/counterSlice'
-// import getdataReducer from '../store/getdataSlice'
+import getdataReducer from '../store/getdataSlice'
 import deleteReducer from '../store/deleteSlice'
 import updateReducer from '../store/updateSlice'
 export const store=configureStore({
     reducer:{
   
-        // getdata:getdataReducer,
+        getdata:getdataReducer,
         delete:deleteReducer,
         update:updateReducer
     }

@@ -9,7 +9,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
  import {faArrowCircleLeft, faTrash} from '@fortawesome/free-solid-svg-icons'
 
-//  import { fetchdata } from '../store/getdataSlice'
+  import { fetchdata } from '../store/getdataSlice'
 import {deleteItem} from '../store/deleteSlice'
  import {useSelector,useDispatch} from 'react-redux'
  
@@ -54,34 +54,34 @@ function Viewall() {
 
     }
     const dispatch=useDispatch()
-    // const [receipes, setReceipes]= useState(null)
+   // const [receipes, setReceipes]= useState(null)
   
-    // let receipes=useSelector((state)=>state.getdata.receipes)
-     setReceipes(storedata)
+     let receipes=useSelector((state)=>state.getdata.receipes)
+     //setReceipes(storedata)
     useEffect(()=>{
-        axios.get('http://localhost:8000/recipes')
-        .then(res=>{
-            let data=res.data
-            setReceipes(data)
-             console.log(receipes)
-        })
+        // axios.get('http://localhost:8000/recipes')
+        // .then(res=>{
+        //     let data=res.data
+        //     setReceipes(data)
+        //      console.log(receipes)
+        // })
        dispatch(fetchdata())
     },[])
 
     const deletereceipe=(id)=>{
         dispatch(deleteItem(id))
-// axios.delete('http://localhost:8000/recipes/' + id)
-// .then((res)=>console.log(res))
-// document.location.reload()
+axios.delete('http://localhost:8000/recipes/' + id)
+.then((res)=>console.log(res))
+document.location.reload()
 }
 
     const addnewdata=()=>{
-          axios.post('http://localhost:8000/recipes',data)
-        .then((res)=>{
+        //   axios.post('http://localhost:8000/recipes',data)
+        // .then((res)=>{
          
-             setReceipes(res.data)
-             console.log(res.data)
-        })
+        //      setReceipes(res.data)
+        //      console.log(res.data)
+        // })
 
     }
 
@@ -109,7 +109,7 @@ function Viewall() {
           })}
           {/* <button onClick={addnewdata}>Add dummy data</button> */}
             </div>
-          {/* <Viewall/>    */}
+          <Viewall/>   
         
         </>
       
